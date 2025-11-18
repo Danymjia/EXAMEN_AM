@@ -1,0 +1,153 @@
+.welcome-content {
+  --background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.welcome-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100%;
+  padding: 2rem;
+  text-align: center;
+}
+
+.logo-container {
+  margin-bottom: 3rem;
+  animation: fadeInDown 0.8s ease-out;
+}
+
+.logo-image {
+  width: 150px;
+  height: 150px;
+  margin: 0 auto 1rem;
+  border-radius: 50%;
+  background: white;
+  padding: 1rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  object-fit: contain;
+}
+
+.logo-text {
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.welcome-message {
+  margin-bottom: 3rem;
+  animation: fadeInUp 0.8s ease-out 0.2s both;
+}
+
+.welcome-title {
+  color: white;
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin: 0 0 1rem 0;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.welcome-subtitle {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin: 0;
+  max-width: 300px;
+}
+
+.action-buttons {
+  width: 100%;
+  max-width: 350px;
+  animation: fadeInUp 0.8s ease-out 0.4s both;
+}
+
+.primary-button {
+  --background: white;
+  --color: #667eea;
+  --border-radius: 50px;
+  --padding-top: 1rem;
+  --padding-bottom: 1rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s, box-shadow 0.2s;
+  
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+.secondary-button {
+  --border-color: white;
+  --color: white;
+  --border-radius: 50px;
+  --border-width: 2px;
+  --padding-top: 1rem;
+  --padding-bottom: 1rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+  transition: transform 0.2s, background 0.2s;
+  
+  &:active {
+    transform: scale(0.98);
+  }
+  
+  &:hover {
+    --background: rgba(255, 255, 255, 0.1);
+  }
+}
+
+.guest-button {
+  --color: rgba(255, 255, 255, 0.9);
+  font-weight: 500;
+  margin-top: 1rem;
+  transition: transform 0.2s, color 0.2s;
+  
+  &:active {
+    transform: scale(0.98);
+  }
+  
+  &:hover {
+    --color: white;
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 360px) {
+  .welcome-title {
+    font-size: 2rem;
+  }
+  
+  .welcome-subtitle {
+    font-size: 1rem;
+  }
+  
+  .logo-image {
+    width: 120px;
+    height: 120px;
+  }
+}
+

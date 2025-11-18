@@ -1,0 +1,27 @@
+<ion-tabs>
+  <ion-tab-bar slot="bottom" class="custom-tab-bar">
+    <!-- Always show Planes tab -->
+    <ion-tab-button tab="planes" class="custom-tab">
+      <ion-icon name="phone-portrait" class="tab-icon"></ion-icon>
+      <ion-label class="tab-label">Planes</ion-label>
+    </ion-tab-button>
+
+    <!-- Only show other tabs if not in guest mode -->
+    <ng-container *ngIf="!isGuestMode">
+      <ion-tab-button tab="mis-planes" class="custom-tab">
+        <ion-icon name="list" class="tab-icon"></ion-icon>
+        <ion-label class="tab-label">Mis Planes</ion-label>
+      </ion-tab-button>
+
+      <ion-tab-button tab="chat" class="custom-tab">
+        <ion-icon name="chatbubbles" class="tab-icon"></ion-icon>
+        <ion-label class="tab-label">Chat</ion-label>
+      </ion-tab-button>
+
+      <ion-tab-button tab="perfil" class="custom-tab">
+        <ion-icon name="person" class="tab-icon"></ion-icon>
+        <ion-label class="tab-label">Perfil</ion-label>
+      </ion-tab-button>
+    </ng-container>
+  </ion-tab-bar>
+</ion-tabs>

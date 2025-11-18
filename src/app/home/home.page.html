@@ -1,20 +1,86 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
+    <ion-title> Catálogo de Planes </ion-title>
+    <ion-buttons slot="end">
+      <!-- Mostrar botón de login solo si no está autenticado y no es invitado -->
+      <ion-button
+        *ngIf="!isAuthenticated && !isGuestMode"
+        (click)="goToLogin()"
+      >
+        <ion-icon slot="icon-only" name="log-in"></ion-icon>
+      </ion-button>
+
+      <!-- Mostrar botón de cerrar sesión solo si está autenticado -->
+      <ion-button *ngIf="isAuthenticated" (click)="logout()">
+        <ion-icon slot="icon-only" name="log-out"></ion-icon>
+      </ion-button>
+
+      <!-- Mostrar botón de salir en modo invitado -->
+      <ion-button *ngIf="isGuestMode" (click)="logout()">
+        <ion-icon slot="icon-only" name="exit"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <div class="container">
+    <!-- Solo mostrar en modo invitado -->
+    <div *ngIf="isGuestMode" class="ion-padding">
+      <ion-text color="medium">
+        <small>Modo de solo lectura</small>
+      </ion-text>
+    </div>
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+    <!-- Cargando -->
+    <div *ngIf="loading" class="loading-container">
+      <ion-spinner></ion-spinner>
+      <p>Cargando planes...</p>
+    </div>
+
+    <!-- Lista de Planes -->
+    <div *ngIf="!loading" class="planes-container">
+      <ion-card
+        *ngFor="let plan of planes; trackBy: trackByPlanId"
+        class="plan-card"
+      >
+        <ion-card-header>
+          <ion-card-title>{{ plan.nombre_comercial }}</ion-card-title>
+          <ion-card-subtitle>${{ plan.precio }}/mes</ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+          <p>{{ plan.descripcion }}</p>
+          <p><strong>Datos:</strong> {{ plan.datos_moviles }}</p>
+          <p><strong>Minutos:</strong> {{ plan.minutos_voz }}</p>
+
+          <!-- Botón de contratar - Solo visible si NO es modo invitado -->
+          <ion-button
+            *ngIf="!isGuestMode"
+            expand="block"
+            (click)="contratarPlan(plan.id)"
+          >
+            Contratar Plan
+          </ion-button>
+
+          <!-- En modo invitado, solo muestra el botón de inicio de sesión -->
+          <ion-button
+            *ngIf="isGuestMode"
+            expand="block"
+            fill="clear"
+            size="small"
+            (click)="goToLogin()"
+          >
+            Iniciar sesión para contratar
+          </ion-button>
+        </ion-card-content>
+      </ion-card>
+
+      <!-- Mensaje si no hay planes -->
+      <ion-card *ngIf="planes.length === 0">
+        <ion-card-content>
+          <p>No hay planes disponibles en este momento.</p>
+        </ion-card-content>
+      </ion-card>
+    </div>
   </div>
 </ion-content>

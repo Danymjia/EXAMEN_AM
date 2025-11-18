@@ -1,0 +1,497 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>{{ getPageTitle() }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="refreshContent()">
+        <ion-icon slot="icon-only" name="refresh"></ion-icon>
+      </ion-button>
+      <ion-button *ngIf="selectedSegment === 'planes'" (click)="openPlanForm()">
+        <ion-icon slot="icon-only" name="add"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+  <!-- Segment for Tabs -->
+  <ion-toolbar>
+    <ion-segment
+      [(ngModel)]="selectedSegment"
+      (ionChange)="segmentChanged($event)"
+    >
+      <ion-segment-button value="planes">
+        <ion-label>Planes</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="solicitudes">
+        <ion-label>Solicitudes</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <!-- Plans Tab -->
+  <div *ngIf="selectedSegment === 'planes'">
+    <!-- Loading State -->
+    <div *ngIf="loading" class="ion-text-center ion-padding">
+      <ion-spinner></ion-spinner>
+      <p>Cargando planes...</p>
+    </div>
+
+    <!-- Empty State -->
+    <div
+      *ngIf="!loading && plans.length === 0"
+      class="ion-text-center ion-padding"
+    >
+      <ion-icon name="list-outline" style="font-size: 48px"></ion-icon>
+      <h3>No hay planes disponibles</h3>
+      <p>Comienza creando tu primer plan</p>
+      <ion-button (click)="openPlanForm()">
+        <ion-icon slot="start" name="add"></ion-icon>
+        Crear Plan
+      </ion-button>
+    </div>
+
+    <!-- Plans List -->
+    <div *ngIf="!loading && plans.length > 0">
+      <ion-searchbar
+        placeholder="Buscar planes..."
+        (ionInput)="filterPlans($event)"
+        animated
+        debounce="300"
+      ></ion-searchbar>
+
+      <ion-list>
+        <ion-item-sliding *ngFor="let plan of filteredPlans">
+          <ion-item [class.inactive-plan]="!plan.activo">
+            <ion-avatar slot="start" *ngIf="plan.imagen_url">
+              <img [src]="plan.imagen_url" [alt]="plan.nombre_comercial" />
+            </ion-avatar>
+            <ion-label>
+              <div class="plan-header">
+                <h2>{{ plan.nombre_comercial }}</h2>
+                <ion-badge [color]="plan.activo ? 'success' : 'medium'">
+                  {{ plan.activo ? "Activo" : "Inactivo" }}
+                </ion-badge>
+              </div>
+
+              <p class="plan-description">
+                {{ plan.descripcion || "Sin descripción" }}
+              </p>
+
+              <div class="plan-details">
+                <div class="detail-row">
+                  <span class="detail-label">Precio:</span>
+                  <span class="detail-value"
+                    >${{ plan.precio | number }} /mes</span
+                  >
+                </div>
+
+                <div class="detail-row">
+                  <span class="detail-label">Datos Móviles:</span>
+                  <span class="detail-value">{{
+                    plan.datos_moviles || "No especificado"
+                  }}</span>
+                </div>
+
+                <div class="detail-row">
+                  <span class="detail-label">Minutos Voz:</span>
+                  <span class="detail-value">{{
+                    plan.minutos_voz || "No especificado"
+                  }}</span>
+                </div>
+
+                <div class="detail-row" *ngIf="plan.segmento">
+                  <span class="detail-label">Segmento:</span>
+                  <span class="detail-value">{{ plan.segmento }}</span>
+                </div>
+
+                <div class="detail-row" *ngIf="plan.publico_objetivo">
+                  <span class="detail-label">Público Objetivo:</span>
+                  <span class="detail-value">{{ plan.publico_objetivo }}</span>
+                </div>
+
+                <div class="plan-features">
+                  <ion-chip *ngIf="plan.velocidad_4g" color="primary" outline>
+                    <ion-icon name="speedometer"></ion-icon>
+                    <ion-label>4G: {{ plan.velocidad_4g }}</ion-label>
+                  </ion-chip>
+
+                  <ion-chip *ngIf="plan.velocidad_5g" color="success" outline>
+                    <ion-icon name="flash"></ion-icon>
+                    <ion-label>5G: {{ plan.velocidad_5g }}</ion-label>
+                  </ion-chip>
+
+                  <ion-chip *ngIf="plan.whatsapp" color="whatsapp" outline>
+                    <ion-icon name="logo-whatsapp"></ion-icon>
+                    <ion-label>{{
+                      plan.whatsapp === "ilimitado"
+                        ? "Ilimitado"
+                        : plan.whatsapp
+                    }}</ion-label>
+                  </ion-chip>
+
+                  <ion-chip *ngIf="plan.sms" color="secondary" outline>
+                    <ion-icon name="chatbubbles-outline"></ion-icon>
+                    <ion-label>SMS: {{ plan.sms }}</ion-label>
+                  </ion-chip>
+
+                  <ion-chip
+                    *ngIf="plan.llamadas_internacionales"
+                    color="tertiary"
+                    outline
+                  >
+                    <ion-icon name="call-outline"></ion-icon>
+                    <ion-label>Llamadas Intl.</ion-label>
+                  </ion-chip>
+
+                  <ion-chip *ngIf="plan.roaming" color="warning" outline>
+                    <ion-icon name="globe-outline"></ion-icon>
+                    <ion-label>Roaming</ion-label>
+                  </ion-chip>
+
+                  <ion-chip *ngIf="plan.redes_sociales" color="danger" outline>
+                    <ion-icon name="share-social-outline"></ion-icon>
+                    <ion-label>Redes Sociales</ion-label>
+                  </ion-chip>
+                </div>
+              </div>
+            </ion-label>
+
+            <div
+              class="action-buttons"
+              style="
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                padding: 16px;
+                background-color: #fff;
+                border-top: 1px solid #ddd;
+              "
+            >
+              <ion-button
+                expand="block"
+                fill="solid"
+                color="primary"
+                (click)="$event.stopPropagation(); openPlanForm(plan)"
+              >
+                <ion-icon slot="start" name="create-outline"></ion-icon>
+                Editar
+              </ion-button>
+              <ion-button
+                expand="block"
+                fill="outline"
+                color="danger"
+                (click)="$event.stopPropagation(); deletePlan(plan)"
+              >
+                <ion-icon slot="start" name="trash-outline"></ion-icon>
+                Eliminar
+              </ion-button>
+            </div>
+          </ion-item>
+        </ion-item-sliding>
+      </ion-list>
+    </div>
+  </div>
+
+  <!-- Solicitudes Tab -->
+  <div *ngIf="selectedSegment === 'solicitudes'" class="ion-padding">
+    <div class="header-section">
+      <h2>Solicitudes de Planes</h2>
+      <ion-button (click)="loadSolicitudes()" fill="clear">
+        <ion-icon slot="icon-only" name="refresh"></ion-icon>
+      </ion-button>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="loading" class="ion-text-center ion-padding">
+      <ion-spinner></ion-spinner>
+      <p>Cargando solicitudes...</p>
+    </div>
+
+    <!-- Empty State -->
+    <div
+      *ngIf="!loading && solicitudes.length === 0"
+      class="ion-text-center ion-padding"
+    >
+      <ion-icon name="document-text-outline" style="font-size: 48px"></ion-icon>
+      <h3>No hay solicitudes pendientes</h3>
+      <p>Las solicitudes de los clientes aparecerán aquí</p>
+    </div>
+
+    <!-- Solicitudes List -->
+    <div *ngIf="!loading && solicitudes.length > 0">
+      <ion-list>
+        <ion-item-sliding *ngFor="let solicitud of solicitudes">
+          <ion-item>
+            <ion-avatar slot="start" *ngIf="solicitud.usuario?.foto_url">
+              <img [src]="solicitud.usuario.foto_url" alt="Foto de perfil" />
+            </ion-avatar>
+            <ion-avatar slot="start" *ngIf="!solicitud.usuario?.foto_url">
+              <ion-icon name="person-circle" style="font-size: 40px"></ion-icon>
+            </ion-avatar>
+
+            <ion-label>
+              <h2>{{ solicitud.usuario?.nombres_completos || "Cliente" }}</h2>
+              <h3>
+                {{ solicitud.plan?.nombre_comercial || "Plan no disponible" }}
+              </h3>
+              <p>
+                Solicitado: {{ solicitud.fecha_solicitud | date : "medium" }}
+              </p>
+              <p *ngIf="solicitud.fecha_aprobacion">
+                {{
+                  solicitud.estado === "aprobada" ? "Aprobado" : "Rechazado"
+                }}:
+                {{ solicitud.fecha_aprobacion | date : "medium" }}
+              </p>
+              <p>
+                <ion-badge [color]="getEstadoColor(solicitud.estado)">
+                  {{ (solicitud.estado | titlecase) || "Pendiente" }}
+                </ion-badge>
+              </p>
+            </ion-label>
+            <ion-note slot="end" class="ion-text-right">
+              <div>${{ solicitud.plan?.precio || "0" }}/mes</div>
+              <div
+                *ngIf="solicitud.plan?.datos_moviles"
+                class="ion-text-nowrap"
+              >
+                <small>{{ solicitud.plan.datos_moviles }} GB</small>
+              </div>
+
+              <!-- Action Buttons - Inside the card -->
+              <div
+                class="action-buttons ion-margin-top"
+                *ngIf="solicitud.estado === 'pendiente' || !solicitud.estado"
+              >
+                <ion-button
+                  size="small"
+                  color="success"
+                  (click)="
+                    $event.stopPropagation();
+                    actualizarEstadoSolicitud(solicitud, 'aprobada')
+                  "
+                  class="action-button"
+                >
+                  <ion-icon slot="icon-only" name="checkmark-circle"></ion-icon>
+                </ion-button>
+
+                <ion-button
+                  size="small"
+                  color="danger"
+                  (click)="
+                    $event.stopPropagation();
+                    actualizarEstadoSolicitud(solicitud, 'rechazada')
+                  "
+                  class="action-button"
+                >
+                  <ion-icon slot="icon-only" name="close-circle"></ion-icon>
+                </ion-button>
+
+                <ion-button
+                  size="small"
+                  color="primary"
+                  (click)="$event.stopPropagation(); iniciarChat(solicitud.id)"
+                  class="action-button"
+                >
+                  <ion-icon slot="icon-only" name="chatbubbles"></ion-icon>
+                </ion-button>
+              </div>
+
+              <!-- Chat only button for approved/rejected requests -->
+              <div
+                class="ion-margin-top"
+                *ngIf="
+                  solicitud.estado === 'aprobada' ||
+                  solicitud.estado === 'rechazada'
+                "
+              >
+                <ion-button
+                  size="small"
+                  color="primary"
+                  expand="block"
+                  (click)="$event.stopPropagation(); iniciarChat(solicitud.id)"
+                >
+                  <ion-icon slot="icon-only" name="chatbubbles"></ion-icon>
+                </ion-button>
+              </div>
+            </ion-note>
+          </ion-item>
+
+          <!-- Action buttons have been moved inside the card -->
+        </ion-item-sliding>
+      </ion-list>
+    </div>
+  </div>
+
+  <!-- ... rest of the code remains the same ... -->
+
+  <!-- FAB Button for adding new plans -->
+  <ion-fab
+    *ngIf="selectedSegment === 'planes'"
+    vertical="bottom"
+    horizontal="end"
+    slot="fixed"
+  >
+    <ion-fab-button (click)="openPlanForm()" color="primary">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+  <style>
+    .inactive-plan {
+      opacity: 0.8;
+    }
+
+    ion-item {
+      --padding-start: 16px;
+      --padding-end: 16px;
+      --inner-padding-end: 8px;
+      --border-radius: 12px;
+      margin-bottom: 16px;
+      --background: white;
+      --border-style: solid;
+      --border-width: 1px;
+      --border-color: rgba(0, 0, 0, 0.05);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .plan-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .plan-header h2 {
+      margin: 0;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--ion-color-dark);
+    }
+
+    .plan-description {
+      color: var(--ion-color-medium);
+      font-size: 0.9rem;
+      margin: 8px 0 12px 0;
+    }
+
+    .plan-details {
+      margin-top: 12px;
+    }
+
+    .detail-row {
+      display: flex;
+      margin-bottom: 6px;
+      font-size: 0.9rem;
+    }
+
+    .detail-label {
+      font-weight: 500;
+      color: var(--ion-color-medium);
+      min-width: 120px;
+    }
+
+    .detail-value {
+      color: var(--ion-color-dark);
+      flex: 1;
+    }
+
+    .plan-features {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    ion-chip {
+      --height: 28px;
+      --vertical-padding: 0;
+      font-size: 0.8rem;
+    }
+
+    ion-chip ion-icon {
+      font-size: 0.9rem;
+      margin-right: 4px;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 12px;
+      padding: 16px;
+      margin-top: 16px;
+      border-top: 1px solid var(--ion-color-light);
+      background: rgba(var(--ion-color-light-rgb), 0.3);
+      margin-left: -16px;
+      margin-right: -16px;
+      margin-bottom: -16px;
+      border-bottom-left-radius: 12px;
+      border-bottom-right-radius: 12px;
+    }
+
+    .action-buttons ion-button {
+      flex: 1;
+      --padding-top: 16px;
+      --padding-bottom: 16px;
+      --border-radius: 8px;
+      font-weight: 600;
+      height: 48px;
+    }
+
+    .action-buttons ion-icon {
+      font-size: 1.4rem;
+    }
+
+    ion-item-options {
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+
+    ion-fab {
+      margin-bottom: 20px;
+    }
+
+    ion-badge {
+      margin-right: 5px;
+      margin-top: 5px;
+    }
+
+    .profile-tab {
+      height: 100%;
+    }
+
+    .profile-avatar {
+      width: 100px;
+      height: 100px;
+      margin: 20px auto;
+      background: var(--ion-color-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 3px solid var(--ion-color-primary);
+      border-radius: 50%;
+    }
+
+    .profile-card {
+      margin: 20px 0;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .profile-card ion-icon {
+      color: var(--ion-color-primary);
+      font-size: 1.5rem;
+    }
+
+    .profile-card h3 {
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: var(--ion-color-dark);
+    }
+
+    .profile-card p {
+      color: var(--ion-color-medium);
+      margin-top: 0;
+    }
+  </style>
+</ion-content>

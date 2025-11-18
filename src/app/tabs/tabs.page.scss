@@ -1,0 +1,94 @@
+ion-tab-bar {
+  --background: #ffffff;
+  --border: 1px solid rgba(0, 0, 0, 0.08);
+  height: 70px;
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.05);
+  padding: 8px 0;
+
+  .custom-tab {
+    --color: #6b7280;
+    --color-selected: #4f46e5;
+    --ripple-color: #4f46e5;
+    --background: transparent;
+    --background-focused: rgba(79, 70, 229, 0.08);
+    --padding-top: 6px;
+    --padding-bottom: 8px;
+    transition: all 0.2s ease;
+
+    .tab-icon {
+      font-size: 24px;
+      margin-bottom: 4px;
+      transition: all 0.2s ease;
+    }
+
+    .tab-label {
+      font-size: 12px;
+      font-weight: 500;
+      margin-top: 2px;
+      transition: all 0.2s ease;
+    }
+
+    &[aria-selected="true"] {
+      --color: #4f46e5;
+
+      .tab-icon {
+        transform: translateY(-2px);
+      }
+
+      .tab-label {
+        font-weight: 600;
+      }
+    }
+
+    &:active {
+      opacity: 0.8;
+      transform: scale(0.95);
+    }
+  }
+}
+
+// Add a subtle indicator for the active tab
+ion-tab-button::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 3px;
+  background: #4f46e5;
+  border-radius: 3px 3px 0 0;
+  transform: translateX(-50%);
+  transition: width 0.3s ease, left 0.3s ease;
+}
+
+ion-tab-button[aria-selected="true"]::after {
+  width: 60%;
+}
+
+// Add a nice hover effect for desktop users
+@media (hover: hover) {
+  ion-tab-button:hover {
+    --color: #4f46e5;
+
+    .tab-icon {
+      transform: translateY(-2px);
+    }
+  }
+}
+
+// Adjust for smaller screens
+@media (max-width: 400px) {
+  ion-tab-bar {
+    height: 65px;
+
+    .custom-tab {
+      .tab-icon {
+        font-size: 22px;
+      }
+
+      .tab-label {
+        font-size: 11px;
+      }
+    }
+  }
+}

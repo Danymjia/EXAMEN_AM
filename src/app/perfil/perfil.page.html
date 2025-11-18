@@ -1,0 +1,68 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Mi Perfil</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <div class="profile-container">
+    <!-- Avatar/Icono -->
+    <div class="profile-header">
+      <ion-icon name="person-circle-outline" class="profile-avatar"></ion-icon>
+      <h2>{{ nombresCompletos || 'Usuario' }}</h2>
+    </div>
+
+    <!-- Información del Perfil -->
+    <ion-card class="profile-card">
+      <ion-card-header>
+        <ion-card-title>Información Personal</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-item lines="none">
+          <ion-icon name="person-outline" slot="start"></ion-icon>
+          <ion-label>
+            <h3>Nombres Completos</h3>
+            <p>{{ nombresCompletos || 'No especificado' }}</p>
+          </ion-label>
+        </ion-item>
+
+        <ion-item lines="none">
+          <ion-icon name="call-outline" slot="start"></ion-icon>
+          <ion-label>
+            <h3>Teléfono</h3>
+            <p>{{ telefono || 'No especificado' }}</p>
+          </ion-label>
+        </ion-item>
+
+        <ion-item lines="none">
+          <ion-icon name="mail-outline" slot="start"></ion-icon>
+          <ion-label>
+            <h3>Email</h3>
+            <p>{{ email || 'No especificado' }}</p>
+          </ion-label>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Botón de Cerrar Sesión -->
+    <div class="logout-section">
+      <ion-button 
+        expand="block" 
+        color="danger" 
+        (click)="cerrarSesion()"
+        [disabled]="loading">
+        <ion-icon name="log-out-outline" slot="start"></ion-icon>
+        Cerrar Sesión
+      </ion-button>
+    </div>
+
+    <!-- Spinner de carga -->
+    <div *ngIf="loading" class="loading-overlay">
+      <ion-spinner></ion-spinner>
+    </div>
+  </div>
+</ion-content>

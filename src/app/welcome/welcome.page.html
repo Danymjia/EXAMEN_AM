@@ -1,0 +1,46 @@
+<ion-content [fullscreen]="true" class="welcome-content">
+  <div class="welcome-container">
+    <!-- Logo -->
+    <div class="logo-container">
+      <img src="assets/icon/logo.png" alt="Tigo Ecuador" class="logo-image" />
+      <p class="logo-text">Tigo Ecuador</p>
+    </div>
+
+    <!-- Mensaje de Bienvenida -->
+    <div class="welcome-message">
+      <h1 class="welcome-title">¡Bienvenido!</h1>
+      <p class="welcome-subtitle">
+        Encuentra el plan móvil perfecto para ti.
+      </p>
+    </div>
+
+    <!-- Botones de Acción -->
+    <div class="action-buttons">
+      <ion-button 
+        expand="block" 
+        class="primary-button" 
+        (click)="goToLogin()">
+        <ion-icon name="log-in-outline" slot="start"></ion-icon>
+        Iniciar Sesión
+      </ion-button>
+
+      <ion-button 
+        expand="block" 
+        fill="outline" 
+        class="secondary-button" 
+        (click)="goToRegister()">
+        <ion-icon name="person-add-outline" slot="start"></ion-icon>
+        Registrarse
+      </ion-button>
+
+      <ion-button 
+        expand="block" 
+        fill="clear" 
+        class="guest-button" 
+        (click)="exploreAsGuest()">
+        <ion-icon name="eye-outline" slot="start"></ion-icon>
+        Explorar como Invitado
+      </ion-button>
+    </div>
+  </div>
+</ion-content>

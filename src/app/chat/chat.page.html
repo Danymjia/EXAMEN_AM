@@ -1,0 +1,99 @@
+<!-- src/app/chat/chat.page.html -->
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start" *ngIf="selectedConversation">
+      <ion-button fill="clear" (click)="goBack()">
+        <ion-icon slot="start" name="arrow-back"></ion-icon>
+        Regresar
+      </ion-button>
+    </ion-buttons>
+    <ion-title *ngIf="!selectedConversation">Chats</ion-title>
+    <ion-title *ngIf="selectedConversation"
+      >{{ selectedConversation.otherUser.name }}</ion-title
+    >
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="chat-content">
+  <!-- Conversation List -->
+  <div *ngIf="!selectedConversation" class="conversation-list">
+    <ion-list>
+      <ion-item
+        *ngFor="let conv of conversations"
+        (click)="selectConversation(conv.id)"
+        class="conversation-item"
+        [class.unread]="conv.unreadCount > 0"
+      >
+        <ion-avatar slot="start">
+          <ion-icon name="person-circle"></ion-icon>
+        </ion-avatar>
+
+        <ion-label class="conversation-content">
+          <h2>
+            {{ conv.otherUser.name }}
+            <span class="plan-name">• {{ conv.planName }}</span>
+          </h2>
+          <p *ngIf="conv.lastMessage" class="last-message">
+            <span *ngIf="conv.lastMessage.isMe">Tú: </span>
+            {{ conv.lastMessage.text | slice:0:50 }}{{
+            conv.lastMessage.text.length > 50 ? '...' : '' }}
+          </p>
+          <p class="last-time">{{ formatConversationDate(conv.updatedAt) }}</p>
+        </ion-label>
+
+        <ion-badge *ngIf="conv.unreadCount > 0" color="primary" slot="end">
+          {{ conv.unreadCount }}
+        </ion-badge>
+      </ion-item>
+    </ion-list>
+
+    <div *ngIf="conversations.length === 0 && !loading" class="empty-state">
+      <ion-icon name="chatbubbles-outline" class="empty-icon"></ion-icon>
+      <h3>No hay conversaciones</h3>
+      <p>Inicia una conversación desde una solicitud aprobada</p>
+    </div>
+  </div>
+
+  <!-- Chat Messages -->
+  <div *ngIf="selectedConversation" class="chat-messages">
+    <div class="messages-container">
+      <div *ngFor="let mensaje of mensajes" class="message-wrapper">
+        <div
+          [class]="'message ' + (mensaje.usuario_id === userId ? 'message-me' : 'message-other')"
+        >
+          <div class="message-content">
+            <p>{{ mensaje.mensaje }}</p>
+            <span class="message-time"
+              >{{ formatDate(mensaje.created_at) }}</span
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Message Input -->
+    <ion-footer>
+      <ion-toolbar>
+        <div class="message-input-container">
+          <ion-input
+            [(ngModel)]="nuevoMensaje"
+            placeholder="Escribe un mensaje..."
+            (keyup.enter)="enviarMensaje()"
+          ></ion-input>
+          <ion-button
+            (click)="enviarMensaje()"
+            [disabled]="!nuevoMensaje.trim()"
+            slot="end"
+          >
+            <ion-icon name="send-outline"></ion-icon>
+          </ion-button>
+        </div>
+      </ion-toolbar>
+    </ion-footer>
+  </div>
+
+  <!-- Loading Indicator -->
+  <div *ngIf="loading" class="loading-overlay">
+    <ion-spinner></ion-spinner>
+  </div>
+</ion-content>

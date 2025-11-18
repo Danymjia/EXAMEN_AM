@@ -1,0 +1,92 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/welcome"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Registro</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="register-content">
+  <div class="register-container">
+    <div class="logo-section">
+      <ion-icon name="person-add-outline" class="logo-icon"></ion-icon>
+      <h2>¡Crea tu cuenta!</h2>
+      <p>Completa tus datos para comenzar</p>
+    </div>
+
+    <form (ngSubmit)="register()" class="register-form">
+      <ion-item>
+        <ion-label position="stacked">Nombres Completos</ion-label>
+        <ion-input
+          type="text"
+          [(ngModel)]="nombresCompletos"
+          name="nombresCompletos"
+          placeholder="Juan Pérez"
+          required
+          autocomplete="name"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Teléfono</ion-label>
+        <ion-input
+          type="tel"
+          [(ngModel)]="telefono"
+          name="telefono"
+          placeholder="0991234567"
+          required
+          autocomplete="tel"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Email</ion-label>
+        <ion-input
+          type="email"
+          [(ngModel)]="email"
+          name="email"
+          placeholder="tu@email.com"
+          required
+          autocomplete="email"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Contraseña</ion-label>
+        <ion-input
+          type="password"
+          [(ngModel)]="password"
+          name="password"
+          placeholder="Mínimo 6 caracteres"
+          required
+          autocomplete="new-password"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Confirmar Contraseña</ion-label>
+        <ion-input
+          type="password"
+          [(ngModel)]="confirmPassword"
+          name="confirmPassword"
+          placeholder="Repite tu contraseña"
+          required
+          autocomplete="new-password"></ion-input>
+      </ion-item>
+
+      <ion-button
+        expand="block"
+        type="submit"
+        [disabled]="loading"
+        class="register-button">
+        <ion-spinner *ngIf="loading" name="crescent" slot="start"></ion-spinner>
+        <ion-icon *ngIf="!loading" name="person-add-outline" slot="start"></ion-icon>
+        {{ loading ? 'Creando cuenta...' : 'Registrarse' }}
+      </ion-button>
+    </form>
+
+    <div class="login-link">
+      <p>¿Ya tienes una cuenta?</p>
+      <ion-button fill="clear" (click)="goToLogin()">
+        Inicia sesión aquí
+      </ion-button>
+    </div>
+  </div>
+</ion-content>

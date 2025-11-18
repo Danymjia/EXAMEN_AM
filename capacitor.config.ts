@@ -1,9 +1,14 @@
-import type { CapacitorConfig } from '@capacitor/cli';
+import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'io.ionic.starter',
-  appName: 'Examen_MA',
-  webDir: 'www'
+  appId: 'tu.app.id',
+  appName: 'TuApp',
+  webDir: 'www',
+  server: {
+    androidScheme: 'https',
+    cleartext: true,
+    allowNavigation: ['ifqyreythppztikjxmnd.supabase.co']
+  }
 };
 
 export default config;

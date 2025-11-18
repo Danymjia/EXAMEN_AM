@@ -1,0 +1,81 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Mis Planes</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <!-- Cargando -->
+  <div *ngIf="loading && contrataciones.length === 0" class="loading-container">
+    <ion-spinner></ion-spinner>
+    <p>Cargando tus planes...</p>
+  </div>
+
+  <!-- Lista de Contrataciones -->
+  <div *ngIf="!loading" class="planes-container">
+    <ion-card
+      *ngFor="let contratacion of contrataciones; trackBy: trackByContratacionId"
+      class="plan-card"
+      (click)="verDetallesPlan(contratacion)"
+    >
+      <ion-card-header>
+        <div class="card-header-content">
+          <div>
+            <ion-card-title
+              >{{ contratacion.planes_moviles?.nombre_comercial || 'Plan'
+              }}</ion-card-title
+            >
+            <ion-card-subtitle
+              >${{ contratacion.planes_moviles?.precio | number
+              }}/mes</ion-card-subtitle
+            >
+          </div>
+          <ion-badge [color]="getEstadoColor(contratacion.estado)">
+            {{ contratacion.estado | titlecase }}
+          </ion-badge>
+        </div>
+      </ion-card-header>
+
+      <ion-card-content>
+        <div class="plan-details">
+          <p>
+            <ion-icon name="cellular-outline"></ion-icon> Datos: {{
+            contratacion.planes_moviles?.datos_moviles || 'No especificado' }}
+          </p>
+          <p>
+            <ion-icon name="call-outline"></ion-icon> Minutos: {{
+            contratacion.planes_moviles?.minutos_voz || 'No especificado' }}
+          </p>
+          <p>
+            <ion-icon name="calendar-outline"></ion-icon> Fecha: {{
+            contratacion.fecha_contratacion | date:'mediumDate' }}
+          </p>
+        </div>
+
+        <ion-button
+          *ngIf="contratacion.estado === 'aprobada'"
+          expand="block"
+          fill="outline"
+          (click)="iniciarChat($event, contratacion)"
+          class="chat-button"
+        >
+          <ion-icon name="chatbubble-ellipses-outline" slot="start"></ion-icon>
+          Chatear con Asesor
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Mensaje si no hay planes -->
+    <ion-card *ngIf="contrataciones.length === 0" class="no-planes-card">
+      <ion-card-content class="empty-state">
+        <ion-icon name="document-outline" class="empty-icon"></ion-icon>
+        <h3>No tienes planes contratados</h3>
+        <p>Ve a la pestaña "Planes" para contratar tu primer plan móvil.</p>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>

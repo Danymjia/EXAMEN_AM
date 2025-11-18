@@ -1,0 +1,59 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/welcome"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Iniciar Sesión</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="login-content">
+  <div class="login-container">
+    <div class="logo-section">
+      <ion-icon name="phone-portrait-outline" class="logo-icon"></ion-icon>
+      <h2>¡Bienvenido de nuevo!</h2>
+      <p>Inicia sesión para continuar</p>
+    </div>
+
+    <form (ngSubmit)="login()" class="login-form">
+      <ion-item>
+        <ion-label position="stacked">Email</ion-label>
+        <ion-input
+          type="email"
+          [(ngModel)]="email"
+          name="email"
+          placeholder="tu@email.com"
+          required
+          autocomplete="email"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Contraseña</ion-label>
+        <ion-input
+          type="password"
+          [(ngModel)]="password"
+          name="password"
+          placeholder="Ingresa tu contraseña"
+          required
+          autocomplete="current-password"></ion-input>
+      </ion-item>
+
+      <ion-button
+        expand="block"
+        type="submit"
+        [disabled]="loading"
+        class="login-button">
+        <ion-spinner *ngIf="loading" name="crescent" slot="start"></ion-spinner>
+        <ion-icon *ngIf="!loading" name="log-in-outline" slot="start"></ion-icon>
+        {{ loading ? 'Iniciando sesión...' : 'Iniciar Sesión' }}
+      </ion-button>
+    </form>
+
+    <div class="register-link">
+      <p>¿No tienes una cuenta?</p>
+      <ion-button fill="clear" (click)="goToRegister()">
+        Regístrate aquí
+      </ion-button>
+    </div>
+  </div>
+</ion-content>

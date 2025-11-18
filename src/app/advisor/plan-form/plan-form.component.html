@@ -1,0 +1,231 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="cancel()">Cancelar</ion-button>
+    </ion-buttons>
+    <ion-title>{{ plan ? "Editar Plan" : "Nuevo Plan" }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button
+        (click)="onSubmit()"
+        [disabled]="planForm.invalid || isSubmitting"
+      >
+        <ion-spinner
+          *ngIf="isSubmitting"
+          name="crescent"
+          size="small"
+        ></ion-spinner>
+        {{ plan ? "Actualizar" : "Crear" }}
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form [formGroup]="planForm" (ngSubmit)="onSubmit()">
+    <!-- Image Upload -->
+    <div class="image-upload-container ion-margin-bottom">
+      <div class="image-preview" *ngIf="previewImage">
+        <img [src]="previewImage" alt="Plan preview" />
+      </div>
+      <ion-button expand="block" fill="outline" (click)="fileInput.click()">
+        <ion-icon name="image" slot="start"></ion-icon>
+        {{ previewImage ? "Cambiar imagen" : "Seleccionar imagen" }}
+      </ion-button>
+      <input
+        #fileInput
+        type="file"
+        accept="image/*"
+        style="display: none"
+        (change)="onImageSelected($event)"
+      />
+    </div>
+
+    <!-- Plan Details -->
+    <ion-list>
+      <ion-item>
+        <ion-label position="floating">Nombre Comercial</ion-label>
+        <ion-input
+          formControlName="nombre_comercial"
+          type="text"
+          required
+        ></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Descripción</ion-label>
+        <ion-textarea
+          formControlName="descripcion"
+          rows="3"
+          placeholder="Describe las características del plan..."
+          required
+        ></ion-textarea>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Precio ($)</ion-label>
+        <ion-input
+          formControlName="precio"
+          type="number"
+          min="0"
+          step="0.01"
+          required
+        ></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Datos Móviles</ion-label>
+        <ion-input
+          formControlName="datos_moviles"
+          type="text"
+          placeholder="Ej: 10GB, Ilimitado"
+          required
+        ></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Minutos de Voz</ion-label>
+        <ion-input
+          formControlName="minutos_voz"
+          type="text"
+          placeholder="Ej: 500 min, Ilimitado"
+          required
+        ></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Segmento</ion-label>
+        <ion-input formControlName="segmento" type="text"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Público Objetivo</ion-label>
+        <ion-input formControlName="publico_objetivo" type="text"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">SMS</ion-label>
+        <ion-input
+          formControlName="sms"
+          type="text"
+          placeholder="Ej: 100, Ilimitado"
+        ></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Velocidad 4G</ion-label>
+        <ion-input
+          formControlName="velocidad_4g"
+          type="text"
+          placeholder="Ej: 10Mbps"
+        ></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Velocidad 5G</ion-label>
+        <ion-input
+          formControlName="velocidad_5g"
+          type="text"
+          placeholder="Ej: 50Mbps"
+        ></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Redes Sociales</ion-label>
+        <ion-input
+          formControlName="redes_sociales"
+          type="text"
+          placeholder="Ej: Ilimitado, 5GB"
+        ></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">WhatsApp</ion-label>
+        <ion-input
+          formControlName="whatsapp"
+          type="text"
+          placeholder="Ej: Ilimitado, Incluido"
+        ></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Llamadas Internacionales</ion-label>
+        <ion-input
+          formControlName="llamadas_internacionales"
+          type="text"
+          placeholder="Ej: Incluidas, No incluidas"
+        ></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Roaming</ion-label>
+        <ion-input
+          formControlName="roaming"
+          type="text"
+          placeholder="Ej: Incluido, No incluido"
+        ></ion-input>
+      </ion-item>
+    </ion-list>
+  </form>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-buttons slot="end" class="ion-padding-end">
+      <ion-button
+        (click)="onSubmit()"
+        [disabled]="planForm.invalid || isSubmitting"
+        expand="block"
+      >
+        <ion-spinner
+          *ngIf="isSubmitting"
+          name="crescent"
+          size="small"
+        ></ion-spinner>
+        {{ plan ? "Actualizar Plan" : "Crear Plan" }}
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>
+
+<style>
+  .image-upload-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px 0;
+  }
+
+  .image-preview {
+    width: 200px;
+    height: 150px;
+    border: 2px dashed var(--ion-color-medium);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+    overflow: hidden;
+  }
+
+  .image-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  ion-list {
+    background: transparent;
+  }
+
+  ion-item {
+    --background: var(--ion-color-light);
+    border-radius: 8px;
+    margin-bottom: 10px;
+  }
+
+  ion-footer {
+    ion-toolbar {
+      --background: var(--ion-color-light);
+    }
+  }
+</style>

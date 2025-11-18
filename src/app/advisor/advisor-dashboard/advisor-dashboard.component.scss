@@ -1,0 +1,83 @@
+/* Add your custom styles for the advisor dashboard here */
+
+.plan-card {
+  margin-bottom: 16px;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.plan-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  padding: 24px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 24px;
+  color: var(--ion-color-medium);
+}
+
+ion-fab {
+  margin: 16px;
+}
+
+/* Styles for action buttons inside request cards */
+.action-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--ion-color-light-shade);
+  
+  .action-button {
+    --padding-start: 8px;
+    --padding-end: 8px;
+    --padding-top: 0;
+    --padding-bottom: 0;
+    margin: 0;
+    height: 32px;
+    width: 32px;
+    
+    ion-icon {
+      font-size: 1.2em;
+    }
+  }
+}
+
+/* Ensure proper spacing for the chat-only button */
+ion-note > div:last-child {
+  margin-top: 8px;
+  
+  ion-button {
+    --padding-start: 8px;
+    --padding-end: 8px;
+    margin: 0;
+    height: 32px;
+    width: 32px;
+    
+    ion-icon {
+      font-size: 1.2em;
+    }
+  }
+}
+
+/* Make sure the note content is properly aligned */
+ion-note {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+  
+  > div {
+    width: 100%;
+  }
+}
